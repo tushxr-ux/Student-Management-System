@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thakur Shyamnarayan Engineering College (TSEC) | Student Portal</title>
+  <meta name="description" content="Thakur Shyamnarayan Engineering College (TSEC Mumbai) official student management portal. Approved by AICTE, affiliated to University of Mumbai.">
+
+  <!-- Modern Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Core Design System CSS -->
+  <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="app-navbar">
+    <div class="nav-container">
+      <a href="/" class="nav-brand">
+        <div class="brand-icon-wrapper">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <span>TSEC <span class="brand-text-accent">Mumbai</span></span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li>
+            <a href="/" class="nav-link active">
+              <i class="fa-solid fa-house"></i> Home
+            </a>
+          </li>
+          <li>
+            <a href="/students-page" class="nav-link">
+              <i class="fa-solid fa-users"></i> Student Directory
+            </a>
+          </li>
+          <li>
+            <a href="https://tsecmumbai.in/" target="_blank" class="nav-link">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i> Official Website
+            </a>
+          </li>
+          <li>
+            <a href="/students" target="_blank" class="nav-link">
+              <i class="fa-solid fa-code"></i> API
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <span class="nav-status-pill" id="homeStatusPill">
+          <span class="status-dot"></span> Campus Live
+        </span>
+        <a href="/students-page" class="btn btn-primary btn-sm">
+          Open Portal <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="main-wrapper">
+    <section class="hero-section">
+      <div class="hero-pill-badge">
+        <i class="fa-solid fa-award" style="color:#f59e0b;"></i> Zagdu Singh Charitable Trust &bull; AICTE Approved &bull; Affiliated to University of Mumbai
+      </div>
+      
+      <h1 class="hero-title">
+        Thakur Shyamnarayan <br>
+        <span class="hero-gradient-text">Engineering College</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Official Student Information &amp; Management Portal for <strong>TSEC Mumbai</strong>.
+        Administering academic rosters, departmental enrollments, and real-time records across cutting-edge engineering disciplines in Kandivali (E), Mumbai.
+      </p>
+
+      <div class="hero-cta-group">
+        <a href="/students-page" class="btn btn-primary" style="padding: 0.85rem 1.8rem; font-size: 1.05rem;">
+          <i class="fa-solid fa-table-columns"></i> Manage Students Roster
+        </a>
+        <a href="https://tsecmumbai.in/" target="_blank" class="btn btn-secondary" style="padding: 0.85rem 1.6rem; font-size: 1.05rem;">
+          <i class="fa-solid fa-building-columns"></i> Visit tsecmumbai.in
+        </a>
+      </div>
+
+      <!-- Live Quick Stats from Backend -->
+      <div class="stats-grid" style="max-width: 900px; margin: 0 auto 3rem;">
+        <div class="stat-card" style="--card-accent: var(--grad-primary); --card-color: var(--color-indigo);">
+          <div class="stat-top-row">
+            <span class="stat-title">Enrolled Students</span>
+            <div class="stat-icon"><i class="fa-solid fa-user-graduate"></i></div>
+          </div>
+          <div class="stat-value" id="homeStudentCount">--</div>
+          <div class="stat-subtitle">
+            <i class="fa-solid fa-circle-check" style="color:var(--color-emerald)"></i> Active college records
+          </div>
+        </div>
+
+        <div class="stat-card" style="--card-accent: var(--grad-accent); --card-color: var(--color-cyan);">
+          <div class="stat-top-row">
+            <span class="stat-title">B.E. Departments</span>
+            <div class="stat-icon"><i class="fa-solid fa-book-open"></i></div>
+          </div>
+          <div class="stat-value" id="homeCourseCount">--</div>
+          <div class="stat-subtitle">
+            <i class="fa-solid fa-layer-group" style="color:var(--color-cyan)"></i> Engineering disciplines
+          </div>
+        </div>
+
+        <div class="stat-card" style="--card-accent: var(--grad-success); --card-color: var(--color-emerald);">
+          <div class="stat-top-row">
+            <span class="stat-title">Campus Affiliation</span>
+            <div class="stat-icon"><i class="fa-solid fa-shield-halved"></i></div>
+          </div>
+          <div class="stat-value" style="font-size: 1.4rem; padding-top: 0.4rem;">AICTE &bull; MU</div>
+          <div class="stat-subtitle">
+            <i class="fa-solid fa-building" style="color:var(--color-emerald)"></i> University of Mumbai
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About College Section -->
+    <section>
+      <div style="text-align: center; margin-bottom: 2.5rem;">
+        <h2 style="font-family: var(--font-heading); font-size: 2rem; font-weight: 700;">About TSEC Mumbai</h2>
+        <p style="color: var(--text-secondary); max-width: 650px; margin: 0.4rem auto 0;">
+          Thakur Shyamnarayan Engineering College (TSEC), managed by Zagdu Singh Charitable Trust (ZCT), is a premier technical institution committed to nurturing future-ready engineers and innovators.
+        </p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon-box" style="background: rgba(99, 102, 241, 0.15); color: var(--color-indigo);">
+            <i class="fa-solid fa-laptop-code"></i>
+          </div>
+          <h3 class="feature-title">Cutting-Edge Programs</h3>
+          <p class="feature-desc">Offering Bachelor of Engineering (B.E.) programs in Computer Engineering, CSE (Artificial Intelligence &amp; Machine Learning), Information Technology, Electronics &amp; Computer Engineering, and Mechanical Engineering.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-box" style="background: rgba(6, 182, 212, 0.15); color: var(--color-cyan);">
+            <i class="fa-solid fa-microchip"></i>
+          </div>
+          <h3 class="feature-title">World-Class Infrastructure</h3>
+          <p class="feature-desc">Equipped with advanced AR/VR laboratories, high-performance computing centers, modern workshop facilities, smart digital classrooms, and comprehensive central library resources.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-box" style="background: rgba(168, 85, 247, 0.15); color: var(--color-violet);">
+            <i class="fa-solid fa-briefcase"></i>
+          </div>
+          <h3 class="feature-title">Training, Placement &amp; Innovation</h3>
+          <p class="feature-desc">Active industry collaborations, dedicated Training &amp; Placement Cell with eminent recruiters, Institution's Innovation Council (IIC-TSEC), and student chapters of ISTE and DLLE.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-box" style="background: rgba(16, 185, 129, 0.15); color: var(--color-emerald);">
+            <i class="fa-solid fa-certificate"></i>
+          </div>
+          <h3 class="feature-title">Approvals &amp; Accreditations</h3>
+          <p class="feature-desc">Recognized by Directorate of Technical Education (DTE), Government of Maharashtra, approved by AICTE New Delhi, and permanently affiliated to the University of Mumbai.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer with College Details -->
+  <footer class="app-footer">
+    <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 0.35rem;">
+      Thakur Shyamnarayan Engineering College (TSEC) &bull; Zagdu Singh Charitable Trust
+    </div>
+    <div>
+      <i class="fa-solid fa-location-dot" style="color:var(--color-cyan); margin-right: 0.35rem;"></i>
+      Thakur Complex, West to Western Express Highway, Kandivali (E), Mumbai - 400 101
+    </div>
+    <div style="margin-top: 0.25rem;">
+      <i class="fa-solid fa-phone" style="font-size:0.8rem; margin-right: 0.3rem;"></i> 022-28543540 / 28542481 &bull; 
+      <i class="fa-solid fa-envelope" style="font-size:0.8rem; margin-left: 0.5rem; margin-right: 0.3rem;"></i> tsec@thakureducation.org &bull;
+      <a href="https://tsecmumbai.in/" target="_blank" style="color: var(--color-cyan); text-decoration: underline; margin-left: 0.5rem;">tsecmumbai.in</a>
+    </div>
+    <div class="footer-tags" style="margin-top: 1rem;">
+      <span class="tag-badge"><i class="fa-solid fa-building-columns"></i> TSEC Mumbai</span>
+      <span class="tag-badge"><i class="fa-solid fa-university"></i> University of Mumbai</span>
+      <span class="tag-badge"><i class="fa-solid fa-certificate"></i> AICTE Approved</span>
+      <span class="tag-badge"><i class="fa-brands fa-java"></i> Java 21</span>
+      <span class="tag-badge"><i class="fa-solid fa-leaf" style="color:var(--color-emerald)"></i> Spring Boot 4.0</span>
+    </div>
+  </footer>
+
+  <script>
+    // Fetch live metrics on landing page
+    fetch('/students')
+      .then(res => res.json())
+      .then(students => {
+        if (Array.isArray(students)) {
+          document.getElementById('homeStudentCount').textContent = students.length;
+          const uniqueCourses = new Set(students.map(s => s.course)).size;
+          document.getElementById('homeCourseCount').textContent = uniqueCourses;
+        }
+      })
+      .catch(err => {
+        console.error('Home metric fetch error:', err);
+        const pill = document.getElementById('homeStatusPill');
+        if (pill) {
+          pill.innerHTML = '<span class="status-dot" style="background:#ef4444;box-shadow:none;"></span> Disconnected';
+          pill.style.color = '#ef4444';
+        }
+      });
+  </script>
+</body>
+</html>

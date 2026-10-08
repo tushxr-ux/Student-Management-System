@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TSEC Mumbai &bull; Student Directory &amp; Records Console</title>
+  <meta name="description" content="Thakur Shyamnarayan Engineering College (TSEC Mumbai) student directory console. Real-time enrollment tracking and student records management.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="app-navbar">
+    <div class="nav-container">
+      <a href="/" class="nav-brand">
+        <div class="brand-icon-wrapper">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <span>TSEC <span class="brand-text-accent">Mumbai</span></span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li>
+            <a href="/" class="nav-link">
+              <i class="fa-solid fa-house"></i> Home
+            </a>
+          </li>
+          <li>
+            <a href="/students-page" class="nav-link active">
+              <i class="fa-solid fa-users"></i> Directory
+            </a>
+          </li>
+          <li>
+            <a href="https://tsecmumbai.in/" target="_blank" class="nav-link">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i> tsecmumbai.in
+            </a>
+          </li>
+          <li>
+            <a href="/students" target="_blank" class="nav-link">
+              <i class="fa-solid fa-code"></i> API
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div style="display: flex; align-items: center; gap: 0.85rem;">
+        <span class="nav-status-pill" id="backendStatusPill">
+          <span class="status-dot"></span> Campus Live
+        </span>
+        <button class="btn btn-primary btn-sm" onclick="handleOpenAddModal()">
+          <i class="fa-solid fa-plus"></i> Add Student
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Dashboard Wrapper -->
+  <main class="main-wrapper">
+
+    <!-- Header & Action Row -->
+    <div class="dashboard-header">
+      <div class="header-title-group">
+        <h1>Thakur Shyamnarayan Engineering College</h1>
+        <p>Student Directory &bull; Zagdu Singh Charitable Trust (ZCT) &bull; Kandivali (E), Mumbai</p>
+      </div>
+      <div>
+        <button class="btn btn-primary" onclick="handleOpenAddModal()">
+          <i class="fa-solid fa-user-plus"></i> Enrol New Student
+        </button>
+      </div>
+    </div>
+
+    <!-- KPI Stats Cards Row -->
+    <div class="stats-grid">
+      <div class="stat-card" style="--card-accent: var(--grad-primary); --card-color: var(--color-indigo);">
+        <div class="stat-top-row">
+          <span class="stat-title">Total Enrolled</span>
+          <div class="stat-icon"><i class="fa-solid fa-user-graduate"></i></div>
+        </div>
+        <div class="stat-value" id="kpiTotalStudents">0</div>
+        <div class="stat-subtitle">
+          <i class="fa-solid fa-circle-check" style="color:var(--color-emerald)"></i> Active student records
+        </div>
+      </div>
+
+      <div class="stat-card" style="--card-accent: var(--grad-accent); --card-color: var(--color-cyan);">
+        <div class="stat-top-row">
+          <span class="stat-title">B.E. Disciplines</span>
+          <div class="stat-icon"><i class="fa-solid fa-book-bookmark"></i></div>
+        </div>
+        <div class="stat-value" id="kpiTotalCourses">0</div>
+        <div class="stat-subtitle">
+          <i class="fa-solid fa-layer-group" style="color:var(--color-cyan)"></i> Active departments
+        </div>
+      </div>
+
+      <div class="stat-card" style="--card-accent: var(--grad-warning); --card-color: var(--color-amber);">
+        <div class="stat-top-row">
+          <span class="stat-title">Top Department</span>
+          <div class="stat-icon"><i class="fa-solid fa-fire"></i></div>
+        </div>
+        <div class="stat-value" id="kpiTopCourse" style="font-size: 1.45rem; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">--</div>
+        <div class="stat-subtitle">
+          <i class="fa-solid fa-chart-line" style="color:var(--color-amber)"></i> Highest enrollment
+        </div>
+      </div>
+
+      <div class="stat-card" style="--card-accent: var(--grad-success); --card-color: var(--color-emerald);">
+        <div class="stat-top-row">
+          <span class="stat-title">Next Available ID</span>
+          <div class="stat-icon"><i class="fa-solid fa-fingerprint"></i></div>
+        </div>
+        <div class="stat-value" id="kpiNextId" style="color: var(--color-emerald);">#101</div>
+        <div class="stat-subtitle">
+          <i class="fa-solid fa-wand-magic-sparkles" style="color:var(--color-emerald)"></i> Auto-recommended ID
+        </div>
+      </div>
+    </div>
+
+    <!-- Toolbar & Filter Bar -->
+    <div class="toolbar-panel">
+      <div class="toolbar-left">
+        <div class="search-box-wrapper">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input
+            type="text"
+            id="searchInput"
+            class="search-input"
+            placeholder="Search by student name, course, or ID..."
+            autocomplete="off"
+          />
+        </div>
+
+        <select id="courseFilterSelect" class="filter-select">
+          <option value="ALL">All Departments</option>
+        </select>
+      </div>
+
+      <div class="toolbar-right">
+        <div class="view-toggle-group">
+          <button id="tableViewBtn" class="view-btn active" title="Table View">
+            <i class="fa-solid fa-list-ul"></i>
+          </button>
+          <button id="cardViewBtn" class="view-btn" title="Card Grid View">
+            <i class="fa-solid fa-border-all"></i>
+          </button>
+        </div>
+
+        <button class="btn btn-secondary" onclick="exportStudentsToCSV()">
+          <i class="fa-solid fa-download"></i> Export CSV
+        </button>
+
+        <button class="btn btn-secondary btn-icon" onclick="fetchStudents()" title="Refresh Roster">
+          <i class="fa-solid fa-rotate-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Count Summary Strip -->
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; padding: 0 0.25rem;">
+      <div id="studentCountLabel" style="font-size: 0.88rem; color: var(--text-secondary); font-weight: 500;">
+        Loading students...
+      </div>
+      <div id="loadingSpinner" style="display: none; font-size: 0.85rem; color: var(--color-indigo);">
+        <i class="fa-solid fa-circle-notch fa-spin"></i> Syncing...
+      </div>
+    </div>
+
+    <!-- VIEW 1: DATA TABLE -->
+    <div id="tableContainer" class="table-container">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>Student Details</th>
+            <th>Department / Engineering Course</th>
+            <th style="text-align: right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="studentTableBody">
+          <!-- Dynamically populated rows -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- VIEW 2: CARDS GRID -->
+    <div id="cardsContainer" class="cards-grid" style="display: none;">
+      <!-- Dynamically populated cards -->
+    </div>
+
+    <!-- EMPTY / NO RESULTS STATE -->
+    <div id="emptyState" class="empty-state" style="display: none;">
+      <div class="empty-icon">
+        <i class="fa-solid fa-user-slash"></i>
+      </div>
+      <h3 class="empty-title">No Students Found</h3>
+      <p class="empty-desc">No records match your active search or filter criteria. Try adjusting your query or enrol a new student.</p>
+      <button class="btn btn-primary" onclick="handleOpenAddModal()">
+        <i class="fa-solid fa-plus"></i> Enrol New Student
+      </button>
+    </div>
+
+  </main>
+
+  <!-- ====================================================================== -->
+  <!-- MODAL: ADD / EDIT STUDENT                                              -->
+  <!-- ====================================================================== -->
+  <div id="studentModal" class="modal-overlay">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3 id="modalTitleText" class="modal-title">
+          <i class="fa-solid fa-user-plus" style="color:var(--color-indigo)"></i> Enrol New Student
+        </h3>
+        <button class="modal-close-btn" onclick="closeModal('studentModal')">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="studentModalForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="modalStudentId" class="form-label">Student ID (Roll / Reg. No)</label>
+            <div class="input-with-hint">
+              <input
+                type="number"
+                id="modalStudentId"
+                class="form-control"
+                placeholder="e.g. 104"
+                required
+              />
+            </div>
+            <span style="font-size: 0.76rem; color: var(--text-muted); margin-top: 0.35rem; display: block;">
+              Unique registration number for the student in TSEC database.
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="modalStudentName" class="form-label">Full Name</label>
+            <input
+              type="text"
+              id="modalStudentName"
+              class="form-control"
+              placeholder="e.g. Aditya Sharma"
+              required
+            />
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0.5rem;">
+            <label for="modalStudentCourse" class="form-label">Department / Course (TSEC Mumbai)</label>
+            <input
+              type="text"
+              id="modalStudentCourse"
+              class="form-control"
+              placeholder="Select or type engineering branch..."
+              list="courseSuggestions"
+              required
+            />
+            <datalist id="courseSuggestions">
+              <option value="Computer Engineering">
+              <option value="Computer Science & Engineering (AI & ML)">
+              <option value="Information Technology">
+              <option value="Electronics & Computer Engineering">
+              <option value="Mechanical Engineering">
+            </datalist>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('studentModal')">
+            Cancel
+          </button>
+          <button type="submit" id="modalSubmitBtn" class="btn btn-primary">
+            Enrol Student
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ====================================================================== -->
+  <!-- MODAL: CONFIRM DELETION                                                -->
+  <!-- ====================================================================== -->
+  <div id="deleteModal" class="modal-overlay">
+    <div class="modal-window">
+      <div class="modal-header" style="border-bottom-color: rgba(239, 68, 68, 0.25);">
+        <h3 class="modal-title" style="color: #f87171;">
+          <i class="fa-solid fa-triangle-exclamation"></i> Confirm Deletion
+        </h3>
+        <button class="modal-close-btn" onclick="closeModal('deleteModal')">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body" style="text-align: center; padding: 2rem 1.6rem 1.6rem;">
+        <div style="width: 60px; height: 60px; border-radius: 50%; background: rgba(239, 68, 68, 0.12); color: #ef4444; font-size: 1.8rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem;">
+          <i class="fa-solid fa-trash-can"></i>
+        </div>
+        <p style="font-size: 1.05rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">
+          Are you sure you want to delete this student record?
+        </p>
+        <p style="font-size: 0.9rem; color: var(--text-secondary);">
+          Record for <span id="deleteTargetName" style="color: #fff; font-weight: 600;"></span> will be permanently erased from TSEC student roster.
+        </p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('deleteModal')">
+          Cancel
+        </button>
+        <button type="button" id="confirmDeleteBtn" class="btn btn-danger">
+          Delete Student
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================== -->
+  <!-- TOAST CONTAINER                                                        -->
+  <!-- ====================================================================== -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Footer with College Details -->
+  <footer class="app-footer" style="margin-top: 3rem;">
+    <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 0.35rem;">
+      Thakur Shyamnarayan Engineering College (TSEC Mumbai) &bull; Kandivali (E), Mumbai
+    </div>
+    <div style="font-size: 0.82rem; color: var(--text-secondary);">
+      Zagdu Singh Charitable Trust (ZCT) &bull; Approved by AICTE &bull; Affiliated to University of Mumbai &bull; 
+      <a href="https://tsecmumbai.in/" target="_blank" style="color: var(--color-cyan); text-decoration: underline;">tsecmumbai.in</a>
+    </div>
+  </footer>
+
+  <!-- Dashboard Script -->
+  <script th:src="@{/js/dashboard.js}" src="/js/dashboard.js"></script>
+</body>
+</html>
