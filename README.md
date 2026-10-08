@@ -93,7 +93,17 @@ Ensure you have the following installed on your machine:
      ./mvnw spring-boot:run
      ```
 
-3. **Access the application**:
+3. **Or Run with Docker**:
+   ```bash
+   # Build and run using Docker Compose
+   docker compose up --build
+
+   # Or build and run standalone container
+   docker build -t student-management-system .
+   docker run -p 8080:8080 student-management-system
+   ```
+
+4. **Access the application**:
    - 🏠 **Home Portal**: [http://localhost:8080/](http://localhost:8080/)
    - 📋 **Student Directory & Console**: [http://localhost:8080/students-page](http://localhost:8080/students-page)
    - 🔌 **REST API**: [http://localhost:8080/students](http://localhost:8080/students)
