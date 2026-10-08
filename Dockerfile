@@ -16,7 +16,7 @@ WORKDIR /app
 # Copy the built jar from the builder stage
 COPY --from=builder /app/target/*.jar app.jar
 
-# Expose Spring Boot's default HTTP port
+ENV PORT=8080
 EXPOSE 8080
 
 # Run the application
